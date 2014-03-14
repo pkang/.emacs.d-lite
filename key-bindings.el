@@ -15,17 +15,19 @@
 (global-set-key (kbd "C-x C-i") 'ido-imenu)
 
 ;; Projectile find file in project
-(global-set-key (kbd "M-N") 'projectile-find-file)
+(global-set-key (kbd "s-N") 'projectile-find-file)
+
 
 ;; erase buffer
-(global-set-key (kbd "M-k") 'erase-buffer)
+(global-set-key (kbd "s-k") 'erase-buffer)
 
 ;; toggle two most recent buffers
 (fset 'quick-switch-buffer [?\C-x ?b return])
 (global-set-key (kbd "s-b") 'quick-switch-buffer)
 
 ;; Edit file with sudo
-(global-set-key (kbd "M-s e") 'sudo-edit)
+(global-set-key "\M-s e" 'sudo-edit)
+(global-set-key "\C-co" 'compile)
 
 ;; Copy file path to kill ring
 (global-set-key (kbd "C-x M-w") 'copy-current-file-path)
@@ -34,7 +36,8 @@
 (global-set-key (kbd "<f1> a") 'apropos)
 
 ;; F5 to run xmp in a ruby buffer
-(global-set-key (kbd "<f5>") 'xmp)
+(add-hook 'ruby-mode-hook
+          '(λ (local-set-key (kbd "<f5>") 'xmp)))
 
 ;; Should be able to eval-and-replace anywhere.
 (global-set-key (kbd "C-c C-e") 'eval-and-replace)

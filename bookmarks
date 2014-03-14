@@ -1,0 +1,20 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("good_rails"
+ (filename . "~/code/good_rails/")
+ (front-context-string . ".DS_Store\n  -rw-")
+ (rear-context-string . "48 Mar  7 11:36 ")
+ (position . 277))
+("init.el"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . "key-bindings.el\"")
+ (rear-context-string . "bindings\n(load \"")
+ (position . 8330))
+("key-bindings.el"
+ (filename . "~/.emacs.d/key-bindings.el")
+ (front-context-string . "\n\n;; erase buffe")
+ (rear-context-string . "ctile-find-file)")
+ (position . 701))
+)

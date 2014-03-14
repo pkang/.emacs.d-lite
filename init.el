@@ -284,7 +284,7 @@
 ;(require 'setup-perspective)
 (require 'setup-ffip)
 (require 'setup-html-mode)
-(require 'setup-paredit)
+;(require 'setup-paredit)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
