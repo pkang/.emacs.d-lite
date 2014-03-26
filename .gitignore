@@ -19,3 +19,4 @@ site-lisp/adventur-mode
 srecode-map.el
 .edbi-ds-history
 projectile-bookmarks.eld
+bookmarks
