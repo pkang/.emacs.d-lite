@@ -1,50 +1,155 @@
-;; Turn off mouse interface early in startup to avoid momentary display
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-
-(setq inhibit-startup-message t)
-
 ;;------------------------------------------------------------
-;; custom key bindings
+;; global key bindings
 
 (global-set-key "\C-co" 'compile)
-(global-set-key "\C-cl" 'grep)
-(global-set-key "\C-cc" 'comment-region)
-(global-set-key "\C-cs" 'shell)
+(global-set-key "\C-cl" 'ag)
+(global-set-key "\C-c\C-c" 'comment-region)
 (global-set-key "\C-c\C-b" 'browse-url)
 (global-set-key "\C-cj" 'goto-line)
 (global-set-key "\C-z" 'shell)
 ;; (global-set-key "\C-c\C-b" 'ibuffer)
 
-;;
 ;;------------------------------------------------------------
+;; sane defaults
+(setq inhibit-startup-message t)
+(setq line-number-mode t)
+(setq column-number-mode t)
+(setq fill-column 80)
+(set-default 'indent-tabs-mode nil)
+(setq-default tab-width 2)
+(global-font-lock-mode t)
+
+(when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
+(set-default 'sentence-end-double-space nil) ;; Sentences do not need double spaces to end. Period.
+(setq x-select-enable-clipboard t) ; Allow pasting selection outside of Emacs
+(global-auto-revert-mode 1)	   ; Auto refresh buffers
+(setq global-auto-revert-non-file-buffers t) ; Also auto refresh dired, but be quiet about it
+(setq auto-revert-verbose nil)
+(setq echo-keystrokes 0.1)	   ; Show keystrokes in progress
+(setq delete-by-moving-to-trash t) ; Move files to trash when deleting
+(setq shift-select-mode nil) ; Real emacs knights don't use shift to mark things
+(auto-compression-mode t)    ; Transparently open compressed files
+(delete-selection-mode 1) ;; Remove text in active region if inserting text
+(setq jump-char-lazy-highlight-face nil) ;; Don't highlight matches with jump-char - it's distracting
+(set-default 'indicate-empty-lines t);; Show me empty lines after buffer end
+(global-subword-mode 1);; Easily navigate sillycased words
+(setq-default truncate-lines t) ;; Don't break lines for me, please
+(setq gc-cons-threshold 20000000) ;; Don't be so stingy on the memory, we have lots now. It's the distant future.
+
+(winner-mode 1)	;; Undo/redo window configuration with C-c <left>/<right>
+
+(defalias 'yes-or-no-p 'y-or-n-p)  ; Answering just 'y' or 'n' will do
+
+(setq locale-coding-system 'utf-8) ; pretty
+(set-terminal-coding-system 'utf-8) ; pretty
+(set-keyboard-coding-system 'utf-8) ; pretty
+(set-selection-coding-system 'utf-8) ; please
+(prefer-coding-system 'utf-8) ; with sugar on top
+
+;; Show active region
+(transient-mark-mode 1)
+(make-variable-buffer-local 'transient-mark-mode)
+(put 'transient-mark-mode 'permanent-local t)
+(setq-default transient-mark-mode t)
+
+;;------------------------------------------------------------
+;; Save point position between sessions
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+
+;;------------------------------------------------------------
+;; load paths
+(add-to-list 'load-path user-emacs-directory)
+;; (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
+;; (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
+
+;;------------------------------------------------------------
+;; setup ELPA, defines: require-package
+(require 'setup-package)
+
+;;------------------------------------------------------------
+;; os x
+(when (equal system-type 'darwin)
+  (require-package 'exec-path-from-shell)
+  (exec-path-from-shell-initialize)
+  ;; ; brew install aspell --lang=en
+  ;; (setq ispell-program-name "/usr/local/bin/aspell") 
+  (setq mac-option-modifier 'super
+        mac-command-modifier 'meta
+        ns-function-modifier 'hyper))
+
+;;------------------------------------------------------------
+;; useful packages
+(require-package 'ag)
+(require-package 'rinari)
+(require-package 'magit)
+(require-package 'fold-dwim)
+
+;;------------------------------------------------------------
+;; better buffers
+(when (fboundp 'ibuffer)
+      (defalias 'list-buffers 'ibuffer))
+(iswitchb-mode 1)
+
+;;------------------------------------------------------------
+;; recent files
+(add-hook 'recentf-mode-hook 
+          (lambda ()
+            (setq recentf-max-saved-items 25)
+            (global-set-key "\C-cf" 'recentf-open-files)))
+(recentf-mode 1)
+
+;;------------------------------------------------------------
+;; folding mode hooks
+(add-hook 'hs-minor-mode-hook 
+          (lambda ()
+            (defun display-code-line-counts (ov)
+              (when (eq 'code (overlay-get ov 'hs))
+                (overlay-put ov 'display
+                             (format " ...%d... "
+                                     (count-lines (overlay-start ov)
+                                                  (overlay-end ov))))))
+            (setq hs-set-up-overlay 'display-code-line-counts)
+            (local-set-key "\C-c_" 'hs-hide-all)
+            (local-set-key "\C-c+" 'hs-show-all)
+            (local-set-key "\C-c\C-_" 'hs-toggle-hiding)
+            (local-set-key "\C-c=" 'hs-show-block)
+            (local-set-key "\C-c-" 'hs-hide-block)))
+
+;;------------------------------------------------------------
+;; ruby mode hooks
+(add-hook 'ruby-mode-hook
+	  (lambda ()
+	    ;; (rvm-activate-corresponding-ruby)
+	    ;; (ruby-electric-mode)
+	    (add-to-list 'hs-special-modes-alist
+			 '(ruby-mode
+			   "\\(def\\|do\\|{\\)"
+			   "\\(end\\|}??\\)"
+			   "#"
+			   (lambda (arg) (ruby-end-of-block)) nil))
+	    (hs-minor-mode 1)
+	    (setq rinari-tags-file-name "TAGS")))
 
 
-;;Setup load path
-;; (load (expand-file-name "load-paths.el" user-emacs-directory))
+;; Settings for currently logged in user
+;; (setq user-settings-dir
+;;       (concat user-emacs-directory "user/" user-login-name))
+;; (add-to-list 'load-path user-settings-dir)
 
 ;; ;; Write backup files to own directory
 ;; (setq backup-directory-alist
 ;;       `(("." . ,(expand-file-name
 ;;                  (concat user-emacs-directory "backups")))))
 
-
 ;; ;; Make backups of files, even when they're in version control
 ;; (setq vc-make-backup-files t)
 
-;; ;; Save point position between sessions
-;; (require 'saveplace)
-;; (setq-default save-place t)
-;; (setq save-place-file (expand-file-name ".places" user-emacs-directory))
-
-;; ;; Are we on a mac?
-;; (setq is-mac (equal system-type 'darwin))
-
-;; ;; Setup packages
-;; (require 'setup-package)
-
-;; ;; Install extensions if they're missing
+;; ;; install extensions if they're missing
 ;; (defun init--install-packages ()
 ;;   (packages-install
 ;;    '(
@@ -118,7 +223,6 @@
 ;;      ;; rainbow-mode
 ;;      ;; robe
 ;;      ;; restclient
-;;      ;; rinari
 ;;      ;; rsense
 ;;      ;; rvm 
 ;;      ;; s
@@ -241,12 +345,6 @@
 ;; ;; Setup rinari
 ;; (require 'rinari)
 
-;; (add-hook 'ruby-mode-hook
-;;           (lambda ()
-;;             (rvm-activate-corresponding-ruby)
-;;             (ruby-electric-mode)
-;;             (setq rinari-tags-file-name "TAGS")))
-
 ;; (add-hook 'ruby-mode-hook 'robe-mode)
 ;; (add-hook 'robe-mode-hook 'robe-ac-setup)
 
@@ -270,10 +368,6 @@
 ;; ;; Lets start with a smattering of sanity
 ;; (require 'sane-defaults)
 
-;; ;; Setup environment variables from the user's shell.
-;; (when is-mac
-;;   (require-package 'exec-path-from-shell)
-;;   (exec-path-from-shell-initialize))
 ;; (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 ;; (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
@@ -375,8 +469,6 @@
 ;; ;; Elisp go-to-definition with M-. and back again with M-,
 ;; ;; (autoload 'elisp-slime-nav-mode "elisp-slime-nav")
 ;; ;; (add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t) (eldoc-mode 1)))
-
-;; (when is-mac (require 'mac))
 
 ;; ;; Fix whitespace on save, but only if the file was clean
 ;; (global-whitespace-cleanup-mode)

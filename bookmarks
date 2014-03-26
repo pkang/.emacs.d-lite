@@ -2,16 +2,31 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("good_rails"
+(("dot-emacs.el"
+ (filename . "~/dot-emacs.el")
+ (front-context-string . "\n\n(when (fboundp")
+ (rear-context-string . "e-3 = C-x 0\"))))")
+ (position . 1411))
+("models_spec"
+ (filename . "~/code/good_rails/spec/models/")
+ (front-context-string . "charity_spec.rb\n")
+ (rear-context-string . "24 Mar 26 06:42 ")
+ (position . 932))
+("Desktop"
+ (filename . "~/Desktop/")
+ (front-context-string . ".DS_Store\n  drwx")
+ (rear-context-string . "92 Mar 23 21:09 ")
+ (position . 282))
+("good_rails"
  (filename . "~/code/good_rails/")
- (front-context-string . ".DS_Store\n  -rw-")
- (rear-context-string . "48 Mar  7 11:36 ")
- (position . 277))
+ (front-context-string . "app\n  drwxr-xr-x")
+ (rear-context-string . "48 Mar 25 01:48 ")
+ (position . 1216))
 ("init.el"
  (filename . "~/.emacs.d/init.el")
- (front-context-string . "key-bindings.el\"")
- (rear-context-string . "bindings\n(load \"")
- (position . 8330))
+ (front-context-string . "	    (setq recen")
+ (rear-context-string . "k\n	  (lambda ()\n")
+ (position . 4032))
 ("key-bindings.el"
  (filename . "~/.emacs.d/key-bindings.el")
  (front-context-string . "\n\n;; erase buffe")
