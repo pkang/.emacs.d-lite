@@ -1,0 +1,36 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(#1=(#("init.el" 0 7
+      (bmkp-full-record #1#))
+    (end-position . 2508)
+    (filename . "~/.emacs.d/init.el")
+    (buffer-name . "init.el")
+    (front-context-string . ";; os x\n;; (when")
+    (rear-context-string . "---------------\n")
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 7)
+    (time 21533 8644 154544 0)
+    (created 21533 5058 543149 0)
+    (position . 2508))
+#1=(#("Desktop" 0 7
+      (bmkp-full-record #1#))
+    (buffer-name . "Desktop")
+    (front-context-string . ".DS_Store\n  drwx")
+    (rear-context-string . "92 Apr  2 21:37 ")
+    (front-context-region-string)
+    (rear-context-region-string)
+    (visits . 1)
+    (time 21309 44971 686942 0)
+    (created 21309 44829 925295 0)
+    (position . 284)
+    (filename . "/Users/goodsearchdev/Desktop/")
+    (dired-directory . "~/Desktop/")
+    (dired-marked)
+    (dired-switches . "-al")
+    (dired-subdirs)
+    (dired-hidden-dirs)
+    (handler . bmkp-jump-dired))
+)

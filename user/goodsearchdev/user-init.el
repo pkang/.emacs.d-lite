@@ -3,9 +3,6 @@
 
 (global-unset-key (kbd "s-p"))
 
-(global-set-key "\C-co" 'compile)
-
-
 ;; appearance
 (load-theme 'monokai)
 
