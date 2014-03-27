@@ -41,7 +41,8 @@
 
 (winner-mode 1)	;; Undo/redo window configuration with C-c <left>/<right>
 
-(defalias 'yes-or-no-p 'y-or-n-p)  ; Answering just 'y' or 'n' will do
+;; TODO: as much as I like this, it would confuse me on other systems
+;; (defalias 'yes-or-no-p 'y-or-n-p)  ; Answering just 'y' or 'n' will do
 
 (setq locale-coding-system 'utf-8) ; pretty
 (set-terminal-coding-system 'utf-8) ; pretty
