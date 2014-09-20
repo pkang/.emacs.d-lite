@@ -1,69 +1,65 @@
 ;;------------------------------------------------------------
-;; global key bindings
+;; themes
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(load-theme 'manoj-dark t)
 
+;;------------------------------------------------------------
+;; global key bindings
 (global-set-key "\C-co" 'compile)
 (global-set-key "\C-cl" 'ag)
 (global-set-key "\C-c\C-c" 'comment-region)
 (global-set-key "\C-c\C-b" 'browse-url)
-(global-set-key "\C-cj" 'goto-line)
-(global-set-key "\C-z" 'shell)
-;; (global-set-key "\C-c\C-b" 'ibuffer)
-
-;;------------------------------------------------------------
-;; sane defaults
-(setq inhibit-startup-message t)
-(setq line-number-mode t)
-(setq column-number-mode t)
-(setq fill-column 80)
-(set-default 'indent-tabs-mode nil)
-(setq-default tab-width 2)
-(global-font-lock-mode t)
 
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(when (fboundp 'ibuffer) (defalias 'list-buffers 'ibuffer))
 
-(set-default 'sentence-end-double-space nil) ;; Sentences do not need double spaces to end. Period.
-(setq x-select-enable-clipboard t) ; Allow pasting selection outside of Emacs
-(global-auto-revert-mode 1)	   ; Auto refresh buffers
-(setq global-auto-revert-non-file-buffers t) ; Also auto refresh dired, but be quiet about it
+;;------------------------------------------------------------
+;; sane defaults
+(display-time)
+(global-font-lock-mode t)
+(global-auto-revert-mode 1)
+(auto-compression-mode t)
+(delete-selection-mode 1)
+(global-subword-mode 1) 
+
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
+(setq-default sentence-end-double-space nil)
+(setq-default indicate-empty-lines t) 
+(setq-default truncate-lines t)             
+
+(setq inhibit-startup-message t)
+(setq line-number-mode t)
+(setq display-time-24hr-format t)
+(setq display-time-day-and-date t)
+(setq column-number-mode t)
+(setq fill-column 80)
+(setq x-select-enable-clipboard t)    
+(setq global-auto-revert-non-file-buffers t)
+(setq jump-char-lazy-highlight-face nil)    
+(setq echo-keystrokes 0.1)                  
+(setq delete-by-moving-to-trash t)          
+(setq gc-cons-threshold 20000000)           
 (setq auto-revert-verbose nil)
-(setq echo-keystrokes 0.1)	   ; Show keystrokes in progress
-(setq delete-by-moving-to-trash t) ; Move files to trash when deleting
-(setq shift-select-mode nil) ; Real emacs knights don't use shift to mark things
-(auto-compression-mode t)    ; Transparently open compressed files
-(delete-selection-mode 1) ;; Remove text in active region if inserting text
-(setq jump-char-lazy-highlight-face nil) ;; Don't highlight matches with jump-char - it's distracting
-(set-default 'indicate-empty-lines t);; Show me empty lines after buffer end
-(global-subword-mode 1);; Easily navigate sillycased words
-(setq-default truncate-lines t) ;; Don't break lines for me, please
-(setq gc-cons-threshold 20000000) ;; Don't be so stingy on the memory, we have lots now. It's the distant future.
+(setq vc-make-backup-files t)        ; make backup files even in version control
 
-(winner-mode 1)	;; Undo/redo window configuration with C-c <left>/<right>
+(setq bmkp-last-as-first-bookmark-file "~/.emacs.d/.bookmarks")
+(setq backup-directory-alist `(("." . "~/.emacs.d/.backups")))
 
-;; TODO: as much as I like this, it would confuse me on other systems
-;; (defalias 'yes-or-no-p 'y-or-n-p)  ; Answering just 'y' or 'n' will do
-
-(setq locale-coding-system 'utf-8) ; pretty
-(set-terminal-coding-system 'utf-8) ; pretty
-(set-keyboard-coding-system 'utf-8) ; pretty
-(set-selection-coding-system 'utf-8) ; please
-(prefer-coding-system 'utf-8) ; with sugar on top
-
-;; Show active region
-(transient-mark-mode 1)
-(make-variable-buffer-local 'transient-mark-mode)
-(put 'transient-mark-mode 'permanent-local t)
-(setq-default transient-mark-mode t)
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
 
 ;;------------------------------------------------------------
 ;; Save point position between sessions
-(require 'saveplace)
-(setq-default save-place t)
-(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+;; (require 'saveplace)
+;; (setq-default save-place t)
+;; (setq save-place-file (expand-file-name ".places" user-emacs-directory))
 
-;;------------------------------------------------------------
-;; load paths
 (add-to-list 'load-path user-emacs-directory)
 ;; (add-to-list 'load-path (concat user-emacs-directory "site-lisp"))
 ;; (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
@@ -78,23 +74,16 @@
   (require-package 'exec-path-from-shell)
   (exec-path-from-shell-initialize)
   ;; ; brew install aspell --lang=en
-  ;; (setq ispell-program-name "/usr/local/bin/aspell") 
-  (setq mac-option-modifier 'super
-        mac-command-modifier 'meta
-        ns-function-modifier 'hyper))
+  (setq ispell-program-name "/usr/local/bin/aspell")
+)
 
 ;;------------------------------------------------------------
-;; useful packages
+;; 
 (require-package 'ag)
 (require-package 'rinari)
 (require-package 'magit)
 (require-package 'fold-dwim)
-
-;;------------------------------------------------------------
-;; better buffers
-(when (fboundp 'ibuffer)
-      (defalias 'list-buffers 'ibuffer))
-(iswitchb-mode 1)
+(require-package 'bookmark+)
 
 ;;------------------------------------------------------------
 ;; recent files
@@ -137,128 +126,105 @@
 	    (setq rinari-tags-file-name "TAGS")))
 
 
-;; Settings for currently logged in user
-;; (setq user-settings-dir
-;;       (concat user-emacs-directory "user/" user-login-name))
-;; (add-to-list 'load-path user-settings-dir)
+;;------------------------------------------------------------
+;; dired mode hooks
+(add-hook 'dired-mode-hook
+          '(lambda ()
+             (set (make-local-variable 'ido-enable-replace-completing-read) nil)))
 
-;; ;; Write backup files to own directory
-;; (setq backup-directory-alist
-;;       `(("." . ,(expand-file-name
-;;                  (concat user-emacs-directory "backups")))))
+;;------------------------------------------------------------
+;; ido mode hooks
+(ido-mode t)
 
-;; ;; Make backups of files, even when they're in version control
-;; (setq vc-make-backup-files t)
+;; install extensions if they're missing
+(defun init--install-packages ()
+  (packages-install
+   '(
+     ;; ac-inf-ruby
+     ;; ac-js2
+     ;; ac-slime
+     ag
+     anything
+     auto-complete
+     bash-completion
+     browse-kill-ring
+     change-inner
+     cider
+     clojure-mode
+     coffee-mode
+     css-eldoc
+     dash
+     dash-at-point
+     direx
+     edbi
+     ;; elisp-slime-nav
+     enh-ruby-mode
+     epl
+     eproject
+     exec-path-from-shell
+     expand-region
+     fill-column-indicator
+     find-file-in-project
+     flx
+     flx-ido
+     flycheck
+     haml-mode
+     highlight-escape-sequences
+     highlight-indentation
+     htmlize
+     ido-at-point
+     ido-ubiquitous
+     ido-vertical-mode
+     idomenu
+     inf-ruby
+     js2-mode
+     js2-refactor
+     jump-char
+     magit
+     move-text
+     multifiles
+     multiple-cursors
+     nodejs-repl
+     org
+     org-plus-contrib
+     ;; paredit
+     ;; pkg-info
+     ;; popwin
+     ;; pretty-symbols
+     ;; projectile
+     ;; project-explorer
+     ;; rainbow-mode
+     ;; robe
+     ;; restclient
+     ;; rsense
+     rvm 
+     ;; skewer-less
+     ;; skewer-mode
+     ;; slim-mode
+     ;; smart-forward
+     ;; smartparens
+     ;; smex
+     ;; smooth-scrolling
+     ;; tagedit
+     ;; visual-regexp
+     ;; visual-regexp-steroids
+     ;; w3m
+     ;; web-mode
+     ;; yasnippet
+     ;; zenburn-theme
+     )))
 
-;; ;; install extensions if they're missing
-;; (defun init--install-packages ()
-;;   (packages-install
-;;    '(
-;;      ;; ac-inf-ruby
-;;      ;; ac-js2
-;;      ;; ;; ac-slime
-;;      ;; ag
-;;      ;; anything
-;;      ;; auto-complete
-;;      ;; bash-completion
-;;      ;; browse-kill-ring
-;;      ;; change-inner
-;;      ;; cider
-;;      ;; clojure-mode
-;;      ;; coffee-mode
-;;      ;; css-eldoc
-;;      ;; dash
-;;      ;; dash-at-point
-;;      ;; direx
-;;      ;; edbi
-;;      ;; ;; elisp-slime-nav
-;;      ;; enh-ruby-mode
-;;      ;; epl
-;;      ;; eproject
-;;      ;; evil
-;;      ;; exec-path-from-shell
-;;      ;; expand-region
-;;      ;; fill-column-indicator
-;;      ;; find-file-in-project
-;;      ;; flx
-;;      ;; flx-ido
-;;      ;; flycheck
-;;      ;; fold-this
-;;      ;; gist
-;;      ;; git-commit-mode
-;;      ;; git-commit-mode
-;;      ;; git-rebase-mode
-;;      ;; gitconfig-mode
-;;      ;; gitconfig-mode
-;;      ;; gitignore-mode
-;;      ;; gitignore-mode
-;;      ;; god-mode
-;;      ;; guide-key
-;;      ;; haml-mode
-;;      ;; helm
-;;      ;; highlight-escape-sequences
-;;      ;; highlight-indentation
-;;      ;; htmlize
-;;      ;; ido-at-point
-;;      ;; ido-ubiquitous
-;;      ;; ido-vertical-mode
-;;      ;; idomenu
-;;      ;; inf-ruby
-;;      ;; jabber
-;;      ;; js2-mode
-;;      ;; js2-refactor
-;;      ;; jump-char
-;;      ;; magit
-;;      ;; move-text
-;;      ;; multifiles
-;;      ;; multiple-cursors
-;;      ;; nodejs-repl
-;;      ;; org
-;;      ;; org-plus-contrib
-;;      ;; paredit
-;;      ;; pkg-info
-;;      ;; popwin
-;;      ;; pretty-symbols
-;;      ;; projectile
-;;      ;; project-explorer
-;;      ;; rainbow-mode
-;;      ;; robe
-;;      ;; restclient
-;;      ;; rsense
-;;      ;; rvm 
-;;      ;; s
-;;      ;; simple-httpd
-;;      ;; simplezen
-;;      ;; skewer-less
-;;      ;; skewer-mode
-;;      ;; slim-mode
-;;      ;; smart-forward
-;;      ;; smartparens
-;;      ;; smex
-;;      ;; smooth-scrolling
-;;      ;; tagedit
-;;      ;; undo-tree
-;;      ;; visual-regexp
-;;      ;; visual-regexp-steroids
-;;      ;; w3m
-;;      ;; web-mode
-;;      ;; wgrep
-;;      ;; whitespace-cleanup-mode
-;;      ;; window-numbering
-;;      ;; yasnippet
-;;      ;; zenburn-theme
-;;      )))
-
-;; (condition-case nil
-;;     (init--install-packages)
-;;   (error
-;;    (package-refresh-contents)
-;;    (init--install-packages)))
+(condition-case nil
+    (init--install-packages)
+  (error
+   (package-refresh-contents)
+   (init--install-packages)))
 
 
-;; ;; Setup el-get
+;;------------------------------------------------------------------------------
+;; EL-GET
+;;
 ;; (setq el-get-user-package-directory (expand-file-name "el-get-init-files" user-emacs-directory))
-
 ;; (unless (require 'el-get nil 'noerror)
 ;;   (with-current-buffer
 ;;       (url-retrieve-synchronously
@@ -266,19 +232,15 @@
 ;;     (let (el-get-master-branch)
 ;;       (goto-char (point-max))
 ;;       (eval-print-last-sexp))))
-
 ;; (el-get 'sync)
-
 ;; ;; installed packages not in melpa
 ;; (require 'el-get)
-
 ;; (setq my-packages
 ;;       (append
 ;;        '(
 ;;          ri-emacs
 ;;          rcodetools
 ;;          ruby-electric
-
 ;;          ;;auto-complete
 ;;                                         ;deferred 
 ;;                                         ;epc
@@ -288,16 +250,14 @@
 ;;                                         ;anything-rcodetools
 ;;          )
 ;;        (mapcar 'el-get-source-name el-get-sources)))
-
 ;; (el-get-cleanup my-packages)
 ;; (el-get 'sync my-packages)
+;;
+;; END EL-GET
+;;------------------------------------------------------------------------------
 
-;; ;; Keep emacs Custom-settings in separate file
-;; (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-;; (load custom-file)
 
-;; ;; Setup appearance
-;; (load "appearance.el")
+
 
 ;; ;; Start autocomplete
 ;; (require 'auto-complete-config)
@@ -325,15 +285,6 @@
 
 ;; ;; Setup edbi
 ;; (setenv "PERL5LIB" (concat "/Users/" user-login-name "/perl5/lib/perl5"))
-
-;; ;; Setup haml-mode
-;; (add-to-list 'auto-mode-alist '("\\.haml$" . haml-mode))
-
-;; ;; Setup php-mode
-;; (add-hook 'php-mode-hook
-;;           (lambda ()
-;;             (setq indent-tabs-mode nil
-;;                   tab-width 2)))
 
 ;; ;; Setup popwin
 ;; (require 'popwin)
@@ -439,9 +390,6 @@
 ;;   (when (file-regular-p file)
 ;;     (load file)))
 
-;; ;; Load reasonably default keybindings
-;; (load "key-bindings.el")
-
 ;; (require 'expand-region)
 ;; (require 'multiple-cursors)
 ;; (require 'delsel)
@@ -479,15 +427,18 @@
 ;; ;; Show line numbers for all files
 ;; ;(add-hook 'find-file-hook (lambda () (linum-mode 1)))
 
-;; ;; Emacs server
-;; (require 'server)
-;; (unless (server-running-p)
-;;   (server-start))
-
 ;; ;; Conclude init by setting up specifics for the current user
 ;; (when (file-exists-p user-settings-dir)
 ;;   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
-
-;; ;Increase GC threshold
-;; ;(setq gc-cons-threshold 20000000)
-;; (put 'erase-buffer 'disabled nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/.bookmarks"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
