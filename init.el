@@ -1,7 +1,7 @@
 ;;------------------------------------------------------------
 ;; themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'manoj-dark t)
+(load-theme 'tango-dark t)
 
 ;;------------------------------------------------------------
 ;; global key bindings
@@ -70,12 +70,12 @@
 
 ;;------------------------------------------------------------
 ;; os x
-(when (equal system-type 'darwin)
-  (require-package 'exec-path-from-shell)
-  (exec-path-from-shell-initialize)
-  ;; ; brew install aspell --lang=en
-  (setq ispell-program-name "/usr/local/bin/aspell")
-)
+;; (when (equal system-type 'darwin)
+;;   ;; (require-package 'exec-path-from-shell)
+;;   ;; (exec-path-from-shell-initialize)
+;;   ;; ; brew install aspell --lang=en
+;;   ;; (setq ispell-program-name "/usr/local/bin/aspell")
+;; )
 
 ;;------------------------------------------------------------
 ;; 
@@ -140,8 +140,8 @@
 (defun init--install-packages ()
   (packages-install
    '(
-     ;; ac-inf-ruby
-     ;; ac-js2
+     ac-inf-ruby
+     ac-js2
      ;; ac-slime
      ag
      anything
@@ -168,7 +168,19 @@
      flx
      flx-ido
      flycheck
+     fold-this
+     gist
+     git-commit-mode
+     git-commit-mode
+     git-rebase-mode
+     gitconfig-mode
+     gitconfig-mode
+     gitignore-mode
+     gitignore-mode
+     god-mode
+     guide-key
      haml-mode
+     helm
      highlight-escape-sequences
      highlight-indentation
      htmlize
@@ -177,6 +189,7 @@
      ido-vertical-mode
      idomenu
      inf-ruby
+     jabber
      js2-mode
      js2-refactor
      jump-char
@@ -187,31 +200,38 @@
      nodejs-repl
      org
      org-plus-contrib
-     ;; paredit
-     ;; pkg-info
-     ;; popwin
-     ;; pretty-symbols
-     ;; projectile
-     ;; project-explorer
-     ;; rainbow-mode
-     ;; robe
-     ;; restclient
-     ;; rsense
+     paredit
+     pkg-info
+     popwin
+     pretty-symbols
+     projectile
+     project-explorer
+     rainbow-mode
+     robe
+     restclient
+     rsense
      rvm 
-     ;; skewer-less
-     ;; skewer-mode
-     ;; slim-mode
-     ;; smart-forward
-     ;; smartparens
-     ;; smex
-     ;; smooth-scrolling
-     ;; tagedit
-     ;; visual-regexp
-     ;; visual-regexp-steroids
-     ;; w3m
-     ;; web-mode
-     ;; yasnippet
-     ;; zenburn-theme
+     s
+     simple-httpd
+     simplezen
+     skewer-less
+     skewer-mode
+     slim-mode
+     smart-forward
+     smartparens
+     smex
+     smooth-scrolling
+     tagedit
+     undo-tree
+     visual-regexp
+     visual-regexp-steroids
+     w3m
+     web-mode
+     wgrep
+     whitespace-cleanup-mode
+     window-numbering
+     yasnippet
+     zenburn-theme
      )))
 
 (condition-case nil
@@ -221,10 +241,9 @@
    (init--install-packages)))
 
 
-;;------------------------------------------------------------------------------
-;; EL-GET
-;;
+;; ;; Setup el-get
 ;; (setq el-get-user-package-directory (expand-file-name "el-get-init-files" user-emacs-directory))
+
 ;; (unless (require 'el-get nil 'noerror)
 ;;   (with-current-buffer
 ;;       (url-retrieve-synchronously
@@ -232,15 +251,19 @@
 ;;     (let (el-get-master-branch)
 ;;       (goto-char (point-max))
 ;;       (eval-print-last-sexp))))
+
 ;; (el-get 'sync)
+
 ;; ;; installed packages not in melpa
 ;; (require 'el-get)
+
 ;; (setq my-packages
 ;;       (append
 ;;        '(
 ;;          ri-emacs
 ;;          rcodetools
 ;;          ruby-electric
+
 ;;          ;;auto-complete
 ;;                                         ;deferred 
 ;;                                         ;epc
@@ -250,14 +273,16 @@
 ;;                                         ;anything-rcodetools
 ;;          )
 ;;        (mapcar 'el-get-source-name el-get-sources)))
+
 ;; (el-get-cleanup my-packages)
 ;; (el-get 'sync my-packages)
-;;
-;; END EL-GET
-;;------------------------------------------------------------------------------
 
+;; ;; Keep emacs Custom-settings in separate file
+;; (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;; (load custom-file)
 
-
+;; ;; Setup appearance
+;; (load "appearance.el")
 
 ;; ;; Start autocomplete
 ;; (require 'auto-complete-config)
@@ -285,6 +310,15 @@
 
 ;; ;; Setup edbi
 ;; (setenv "PERL5LIB" (concat "/Users/" user-login-name "/perl5/lib/perl5"))
+
+;; ;; Setup haml-mode
+;; (add-to-list 'auto-mode-alist '("\\.haml$" . haml-mode))
+
+;; ;; Setup php-mode
+;; (add-hook 'php-mode-hook
+;;           (lambda ()
+;;             (setq indent-tabs-mode nil
+;;                   tab-width 2)))
 
 ;; ;; Setup popwin
 ;; (require 'popwin)
@@ -430,15 +464,16 @@
 ;; ;; Conclude init by setting up specifics for the current user
 ;; (when (file-exists-p user-settings-dir)
 ;;   (mapc 'load (directory-files user-settings-dir nil "^[^#].*el$")))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(bmkp-last-as-first-bookmark-file "~/.emacs.d/.bookmarks"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/.bookmarks")
+ '(fill-column 80))
